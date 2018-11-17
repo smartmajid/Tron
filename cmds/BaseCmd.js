@@ -1,6 +1,5 @@
 const { Command } = require('discord.js-commando')
 const logger = new (require('../util/logger'))()
-const standard = require('./util/Strings').enUS.standard
 
 module.exports = class BaseCmd extends Command {
   log (info) {
@@ -106,7 +105,7 @@ module.exports = class BaseCmd extends Command {
    */
   static async sendMessage (channel, content, author, options = undefined) {
     try {
-      if (!content && !options) return
+      if (!content && !options) return new Error('You must provide at least the content or options params.')
 
       if (author !== undefined) {
         if (canSendMessage(channel, author)) return channel.send(content, options)
