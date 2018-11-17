@@ -17,12 +17,16 @@ module.exports = class Kiss extends Command {
   }
 
   async run (msg, args) {
-    if (msg.mentions.users.size > 0) {
-      var content = `${this.getMentionedUsernames(msg)}, you've been kissed by **${msg.author.username}**. :kiss:`
-    }
+    try {
+      if (msg.mentions.users.size > 0) {
+        var content = `${this.getMentionedUsernames(msg)}, you've been kissed by **${msg.author.username}**. :kiss:`
+      }
 
-    ioTools.getRandomImage('kiss', args).then(image => {
-      Command.sendMessage(msg.channel, content, this.client.user, { files: [image] })
-    }).catch(err => console.error(err))
+      let img = await ioTools.getRandomImage('kiss', args)
+
+      if (img !== undefined) {
+        return Command.sendMessage(msg.channel, content, this.client.user, { files: [img] })
+      } else return Command.sendMessage(msg.channel.id, 'No images could be found for this command. Please contact `+support`.', this.client.user)
+    } catch (err) { console.error(err) }
   }
 }

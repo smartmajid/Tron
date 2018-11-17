@@ -18,12 +18,15 @@ module.exports = class Bite extends Command {
   }
 
   async run (msg, args) {
-    if (msg.mentions.users.size > 0) {
-      var content = `${this.getMentionedUsernames(msg)}, you've been bitten by **${msg.author.username}**.`
-    }
+    try {
+      if (msg.mentions.users.size > 0) {
+        var content = `${this.getMentionedUsernames(msg)}, you've been bitten by **${msg.author.username}**.`
+      }
 
-    ioTools.getRandomImage('bite', args).then(image => {
-      Command.sendMessage(msg.channel, content, this.client.user, { files: [image] })
-    }).catch(err => console.error(err))
+      let img = await ioTools.getRandomImage('bite', args)
+      if (img !== undefined) {
+        return Command.sendMessage(msg.channel, content, this.client.user, { files: [img] })
+      } else return Command.sendMessage(msg.channel, 'No image could be found for this command. Please contact support.', this.client.user)
+    } catch (err) { console.error(err) }
   }
 }

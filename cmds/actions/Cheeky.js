@@ -18,8 +18,12 @@ module.exports = class Cheeky extends Command {
   }
 
   async run (msg, args) {
-    ioTools.getRandomImage('cheeky', args).then(image => {
-      Command.sendMessage(msg.channel, '', this.client.user, { files: [image] })
-    }).catch(err => console.error(err))
+    try {
+      let img = await ioTools.getRandomImage('cheeky', args)
+
+      if (img !== undefined) {
+        return Command.sendMessage(msg.channel, '', this.client.user, { files: [img] })
+      } else return Command.sendMessage(msg.channel.id, 'No images could be found for this command. Please contact `+support`.', this.client.user)
+    } catch (err) { console.error(err) }
   }
 }
